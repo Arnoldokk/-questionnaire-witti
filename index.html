@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionnaire — Mémoire IUA / Witti Finances</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EF;
+    --ink: #1A1612;
+    --ink2: #3D3830;
+    --muted: #8C8378;
+    --accent: #C4622D;
+    --accent2: #8B3A15;
+    --line: rgba(26,22,18,0.1);
+    --card: #FFFFFF;
+    --tag-bg: rgba(196,98,45,0.08);
+    --success: #10B981;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 22px 100px;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 44px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand-wrap { display: flex; align-items: center; gap: 12px; }
+
+  .brand-icon {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; color: white; flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 700;
+  }
+
+  .brand-name span { color: var(--accent); }
+  .brand-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .pill {
+    background: var(--tag-bg);
+    border: 1px solid rgba(196,98,45,0.2);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* HERO */
+  .hero { margin-bottom: 48px; }
+
+  .eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow-line { width: 28px; height: 2px; background: var(--accent); border-radius: 99px; }
+  .eyebrow-txt { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 40px);
+    font-weight: 900; line-height: 1.12;
+    letter-spacing: -0.3px; margin-bottom: 12px;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .hero-desc {
+    font-size: 13.5px; color: var(--muted);
+    line-height: 1.75; max-width: 560px;
+    font-weight: 300;
+  }
+
+  .info-row {
+    display: flex; gap: 28px; margin-top: 22px; flex-wrap: wrap;
+  }
+
+  .info-item { display: flex; flex-direction: column; gap: 2px; }
+  .info-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .info-val { font-size: 13px; font-weight: 600; color: var(--ink2); }
+
+  /* PROGRESS */
+  .prog-wrap { margin-bottom: 40px; }
+  .prog-bar-bg { height: 3px; background: rgba(26,22,18,0.08); border-radius: 99px; overflow: hidden; }
+  .prog-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
+  .prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .prog-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .prog-count { font-size: 12px; color: var(--accent); font-weight: 600; }
+
+  /* SECTION */
+  .section-hdr {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sec-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; font-weight: 900;
+    color: rgba(26,22,18,0.06);
+    line-height: 1; flex-shrink: 0;
+    margin-top: -8px; user-select: none;
+  }
+
+  .sec-tag {
+    font-size: 10px; font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px; font-weight: 700;
+    color: var(--ink); line-height: 1.3;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: background 0.2s;
+  }
+
+  .q-card.done::before { background: var(--accent); }
+  .q-card.done { border-color: rgba(196,98,45,0.2); }
+
+  .q-num {
+    font-size: 10px; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 5px;
+    display: block;
+  }
+
+  .q-text {
+    font-size: 14px; font-weight: 500;
+    color: var(--ink); line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .q-hint {
+    font-size: 12px; color: var(--muted);
+    font-weight: 300; font-style: italic;
+    margin-bottom: 12px; padding: 8px 12px;
+    background: var(--bg); border-radius: 6px;
+    border-left: 2px solid rgba(196,98,45,0.3);
+    line-height: 1.5;
+  }
+
+  /* RADIO / CHECKBOX */
+  .opts { display: flex; flex-direction: column; gap: 7px; }
+  .opts.wrap { flex-direction: row; flex-wrap: wrap; }
+
+  label.opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 13px;
+    cursor: pointer;
+    font-size: 13px; color: var(--ink2);
+    transition: all 0.15s;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  label.opt:hover { border-color: rgba(196,98,45,0.4); background: rgba(196,98,45,0.04); }
+
+  label.opt input[type="radio"],
+  label.opt input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+
+  label.opt:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(196,98,45,0.07);
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* TEXTAREA */
+  textarea.field {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px; color: var(--ink);
+    outline: none; resize: none;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+  }
+
+  textarea.field:focus { border-color: var(--accent); }
+  textarea.field::placeholder { color: var(--muted); }
+
+  /* TEXT INPUT */
+  input.field {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px; color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input.field:focus { border-color: var(--accent); }
+  input.field::placeholder { color: var(--muted); }
+
+  /* SCALE */
+  .scale-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .scale-row { display: flex; gap: 5px; }
+
+  label.scale-btn {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 4px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px; color: var(--muted);
+    font-weight: 500;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+  }
+
+  label.scale-btn input { display: none; }
+  label.scale-btn:hover { border-color: rgba(196,98,45,0.4); color: var(--ink); }
+  label.scale-btn:has(input:checked) { border-color: var(--accent); background: rgba(196,98,45,0.08); color: var(--accent); font-weight: 700; }
+
+  .scale-labels {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--muted);
+    padding: 0 2px;
+  }
+
+  /* STEP */
+  .step { display: none; }
+  .step.active { display: block; animation: fadeUp 0.35s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NAV */
+  .nav { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600; font-size: 13px;
+    cursor: pointer; border: none;
+    transition: all 0.2s; letter-spacing: 0.02em;
+  }
+
+  .btn-main { background: var(--accent); color: white; }
+  .btn-main:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,98,45,0.25); }
+  .btn-back { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+  .btn-back:hover { color: var(--ink); border-color: rgba(26,22,18,0.25); }
+  .btn-submit { background: var(--ink); color: white; }
+  .btn-submit:hover { background: var(--ink2); transform: translateY(-1px); }
+
+  /* SUCCESS SCREEN */
+  .success-screen { display: none; animation: fadeUp 0.5s ease; }
+
+  .success-top {
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 44px 40px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+
+  .success-top::before {
+    content: '';
+    position: absolute; top: -30%; right: -10%;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(196,98,45,0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  .success-icon { font-size: 46px; display: block; margin-bottom: 16px; }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    color: white; margin-bottom: 10px;
+  }
+
+  .success-desc {
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    line-height: 1.7; max-width: 460px;
+    margin: 0 auto; font-weight: 300;
+  }
+
+  .send-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 20px;
+    padding: 5px 14px; margin-top: 18px;
+    font-size: 12px; color: var(--success);
+  }
+
+  .send-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+
+  .recap-box {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .recap-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .recap-row {
+    display: flex; gap: 14px;
+    padding: 9px 0; border-bottom: 1px solid var(--line);
+    font-size: 13px; line-height: 1.5;
+  }
+
+  .recap-row:last-child { border-bottom: none; }
+  .recap-q { color: var(--muted); font-size: 12px; min-width: 180px; flex-shrink: 0; }
+  .recap-a { color: var(--ink2); font-weight: 500; flex: 1; }
+
+  .footer-note {
+    background: var(--tag-bg);
+    border: 1px solid rgba(196,98,45,0.18);
+    border-radius: 10px;
+    padding: 18px 22px;
+    text-align: center;
+    font-size: 12.5px; color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .footer-note strong { color: var(--ink2); }
+
+  @media (max-width: 520px) {
+    .opts.wrap { flex-direction: column; }
+    .scale-row { flex-wrap: wrap; }
+    h1 { font-size: 24px; }
+    .success-top { padding: 28px 18px; }
+    .recap-row { flex-direction: column; gap: 3px; }
+    .recap-q { min-width: unset; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-icon">🏦</div>
+      <div>
+        <div class="brand-name">Witti <span>Finances</span></div>
+        <div class="brand-sub">Guide d'entretien · Chargé d'affaires</div>
+      </div>
+    </div>
+    <div class="pill">IUA · Finance L3 · 2024–2025</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-txt">Activité de synthèse — Mémoire</div>
+    </div>
+    <h1>Financement des PME &<br>du <em>secteur informel</em><br>en Côte d'Ivoire</h1>
+    <p class="hero-desc">Ce guide d'entretien est destiné au chargé d'affaires de Witti Finances. Il vise à comprendre les pratiques d'octroi de crédit, les obstacles liés à la traçabilité des revenus informels et les stratégies d'inclusion financière mises en place.</p>
+    <div class="info-row">
+      <div class="info-item">
+        <span class="info-label">Structure d'accueil</span>
+        <span class="info-val">Witti Finances CI</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Durée estimée</span>
+        <span class="info-val">10 – 15 minutes</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Caractère</span>
+        <span class="info-val">Confidentiel · Académique</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-wrap">
+    <div class="prog-meta">
+      <span class="prog-label">Progression</span>
+      <span class="prog-count" id="progTxt">Section 1 / 4</span>
+    </div>
+    <div class="prog-bar-bg">
+      <div class="prog-bar-fill" id="progFill"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       FORMULAIRE — method POST Formspree
+  ════════════════════════════════════ -->
+  <form
+    id="mainForm"
+    action="https://formspree.io/f/maqvewww"
+    method="POST"
+  >
+    <!-- Champ caché pour identifier le formulaire dans Formspree -->
+    <input type="hidden" name="_subject" value="Entretien Witti Finances — Mémoire IUA Finance L3">
+    <input type="hidden" name="_replyto" value="">
+
+    <!-- ===== SECTION 1 : Profil ===== -->
+    <div class="step active" id="step-0">
+      <div class="section-hdr">
+        <div class="sec-num">01</div>
+        <div>
+          <div class="sec-tag">Profil du répondant</div>
+          <div class="sec-title">Votre rôle et expérience chez Witti Finances</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc0">
+        <span class="q-num">Question 01</span>
+        <div class="q-text">Depuis combien de temps exercez-vous en tant que chargé d'affaires chez Witti Finances ?</div>
+        <div class="opts wrap">
+          <label class="opt"><input type="radio" name="q1_anciennete" value="Moins de 1 an" required> Moins de 1 an</label>
+          <label class="opt"><input type="radio" name="q1_anciennete" value="1 à 3 ans"> 1 à 3 ans</label>
+          <label class="opt"><input type="radio" name="q1_anciennete" value="3 à 5 ans"> 3 à 5 ans</label>
+          <label class="opt"><input type="radio" name="q1_anciennete" value="Plus de 5 ans"> Plus de 5 ans</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc1">
+        <span class="q-num">Question 02</span>
+        <div class="q-text">Dans votre portefeuille clients, quelle est la part approximative des PME et acteurs du secteur informel ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2_part_informel" value="Moins de 25%" required> Moins de 25 %</label>
+          <label class="opt"><input type="radio" name="q2_part_informel" value="25 à 50%"> Entre 25 % et 50 %</label>
+          <label class="opt"><input type="radio" name="q2_part_informel" value="50 à 75%"> Entre 50 % et 75 %</label>
+          <label class="opt"><input type="radio" name="q2_part_informel" value="Plus de 75%"> Plus de 75 %</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc2">
+        <span class="q-num">Question 03</span>
+        <div class="q-text">Witti Finances propose-t-elle des produits de crédit spécifiquement adaptés au secteur informel ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3_produits_informel" value="Oui, produits dédiés" required> Oui, il existe des produits dédiés</label>
+          <label class="opt"><input type="radio" name="q3_produits_informel" value="Adaptés au cas par cas"> Oui, mais adaptés au cas par cas</label>
+          <label class="opt"><input type="radio" name="q3_produits_informel" value="Non, produits classiques"> Non, les produits classiques s'appliquent à tous</label>
+          <label class="opt"><input type="radio" name="q3_produits_informel" value="Je ne sais pas"> Je ne sais pas</label>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button type="button" class="btn btn-main" onclick="goTo(1)">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 2 : Processus d'octroi ===== -->
+    <div class="step" id="step-1">
+      <div class="section-hdr">
+        <div class="sec-num">02</div>
+        <div>
+          <div class="sec-tag">Processus d'octroi de crédit</div>
+          <div class="sec-title">Critères, conditions et procédures d'évaluation</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc3">
+        <span class="q-num">Question 04</span>
+        <div class="q-text">Quels sont les principaux critères évalués par Witti Finances pour accorder un crédit à une PME ou un acteur informel ?<br><small style="color:var(--muted);font-size:11px;">(Plusieurs réponses possibles)</small></div>
+        <div class="q-hint">Ex : régularité des revenus, garanties, ancienneté de l'activité, historique de compte...</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Revenus réguliers et prouvables"> Revenus réguliers et prouvables</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Garantie ou caution"> Garantie ou caution</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Ancienneté de l'activité (min. 1 an)"> Ancienneté de l'activité (minimum 1 an)</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Historique de compte ou de crédit"> Historique de compte ou de crédit</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Formalisation de l'activité"> Formalisation de l'activité (registre, numéro fiscal)</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Domiciliation du compte chez Witti"> Domiciliation du compte chez Witti Finances</label>
+          <label class="opt"><input type="checkbox" name="q4_criteres[]" value="Présence d'un garant solvable"> Présence d'un garant solvable</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc4">
+        <span class="q-num">Question 05</span>
+        <div class="q-text">Quel est le délai moyen de traitement d'un dossier de crédit pour une PME ou un acteur informel ?</div>
+        <div class="opts wrap">
+          <label class="opt"><input type="radio" name="q5_delai" value="Moins de 3 jours" required> Moins de 3 jours</label>
+          <label class="opt"><input type="radio" name="q5_delai" value="3 à 7 jours"> 3 à 7 jours</label>
+          <label class="opt"><input type="radio" name="q5_delai" value="1 à 2 semaines"> 1 à 2 semaines</label>
+          <label class="opt"><input type="radio" name="q5_delai" value="Plus de 2 semaines"> Plus de 2 semaines</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc5">
+        <span class="q-num">Question 06</span>
+        <div class="q-text">Une garantie ou caution est-elle obligatoire pour les crédits inférieurs à 2 millions FCFA ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q6_garantie" value="Oui, toujours obligatoire" required> Oui, elle est toujours obligatoire</label>
+          <label class="opt"><input type="radio" name="q6_garantie" value="Non, une alternative est possible"> Non, une alternative est possible (ex. Mobile Money, témoignage)</label>
+          <label class="opt"><input type="radio" name="q6_garantie" value="Dépend du profil client"> Cela dépend du profil du client</label>
+          <label class="opt"><input type="radio" name="q6_garantie" value="Je ne sais pas"> Je ne sais pas</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc6">
+        <span class="q-num">Question 07</span>
+        <div class="q-text">Sur une échelle de 1 à 5, comment évaluez-vous la complexité du processus d'octroi pour un acteur du secteur informel ?</div>
+        <div class="q-hint">1 = Très simple · 5 = Extrêmement complexe</div>
+        <div class="scale-wrap">
+          <div class="scale-row">
+            <label class="scale-btn"><input type="radio" name="q7_complexite" value="1" required>1</label>
+            <label class="scale-btn"><input type="radio" name="q7_complexite" value="2">2</label>
+            <label class="scale-btn"><input type="radio" name="q7_complexite" value="3">3</label>
+            <label class="scale-btn"><input type="radio" name="q7_complexite" value="4">4</label>
+            <label class="scale-btn"><input type="radio" name="q7_complexite" value="5">5</label>
+          </div>
+          <div class="scale-labels"><span>Très simple</span><span>Très complexe</span></div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button type="button" class="btn btn-back" onclick="goTo(0)">← Retour</button>
+        <button type="button" class="btn btn-main" onclick="goTo(2)">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 3 : Traçabilité ===== -->
+    <div class="step" id="step-2">
+      <div class="section-hdr">
+        <div class="sec-num">03</div>
+        <div>
+          <div class="sec-tag">Problème central — Traçabilité</div>
+          <div class="sec-title">Revenus informels et gestion des dossiers à risque</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc7">
+        <span class="q-num">Question 08</span>
+        <div class="q-text">Le manque de traçabilité des revenus (cash, tontines, ventes informelles) est-il la principale cause de refus des dossiers issus du secteur informel chez Witti Finances ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q8_tracabilite" value="Oui, frein numéro 1" required> Oui, c'est le frein numéro 1</label>
+          <label class="opt"><input type="radio" name="q8_tracabilite" value="Oui, parmi d'autres causes"> Oui, parmi plusieurs causes importantes</label>
+          <label class="opt"><input type="radio" name="q8_tracabilite" value="Non, pas la cause principale"> Non, ce n'est pas la cause principale</label>
+          <label class="opt"><input type="radio" name="q8_tracabilite" value="Difficile à évaluer"> Difficile à évaluer avec précision</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc8">
+        <span class="q-num">Question 09</span>
+        <div class="q-text">Quels documents ou preuves alternatives Witti Finances accepte-t-elle pour évaluer la solvabilité d'un acteur informel ?<br><small style="color:var(--muted);font-size:11px;">(Plusieurs réponses possibles)</small></div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Relevés Mobile Money (Wave, MTN MoMo)"> Relevés Mobile Money (Wave, MTN MoMo...)</label>
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Attestations de fournisseurs ou clients"> Attestations de fournisseurs ou clients</label>
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Témoignage d'association / tontine"> Témoignage d'association ou de tontine</label>
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Preuves physiques de l'activité (photos, stock)"> Preuves physiques de l'activité (photos, stock)</label>
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Aucun document alternatif accepté"> Aucun document alternatif n'est accepté</label>
+          <label class="opt"><input type="checkbox" name="q9_docs_alternatifs[]" value="Autre"> Autre (précisé ci-dessous)</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc9">
+        <span class="q-num">Question 10</span>
+        <div class="q-text">Witti Finances utilise-t-elle des méthodes de scoring alternatives (historique mobile money, analyse comportementale) pour évaluer les dossiers informels ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q10_scoring" value="Oui, intégré au processus" required> Oui, c'est intégré dans notre processus</label>
+          <label class="opt"><input type="radio" name="q10_scoring" value="En cours de déploiement"> En cours de déploiement</label>
+          <label class="opt"><input type="radio" name="q10_scoring" value="Non, pas encore"> Non, pas encore mis en place</label>
+          <label class="opt"><input type="radio" name="q10_scoring" value="Je ne suis pas informé"> Je ne suis pas informé de cela</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc10">
+        <span class="q-num">Question 11</span>
+        <div class="q-text">Selon votre expérience, quel est le taux approximatif de refus des dossiers provenant du secteur informel chez Witti Finances ?</div>
+        <div class="opts wrap">
+          <label class="opt"><input type="radio" name="q11_taux_refus" value="Moins de 20%" required> Moins de 20 %</label>
+          <label class="opt"><input type="radio" name="q11_taux_refus" value="20 à 40%"> 20 % à 40 %</label>
+          <label class="opt"><input type="radio" name="q11_taux_refus" value="40 à 60%"> 40 % à 60 %</label>
+          <label class="opt"><input type="radio" name="q11_taux_refus" value="Plus de 60%"> Plus de 60 %</label>
+          <label class="opt"><input type="radio" name="q11_taux_refus" value="Donnée non disponible"> Je ne dispose pas de cette donnée</label>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button type="button" class="btn btn-back" onclick="goTo(1)">← Retour</button>
+        <button type="button" class="btn btn-main" onclick="goTo(3)">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 4 : Stratégies & Recommandations ===== -->
+    <div class="step" id="step-3">
+      <div class="section-hdr">
+        <div class="sec-num">04</div>
+        <div>
+          <div class="sec-tag">Stratégies & recommandations</div>
+          <div class="sec-title">Leviers d'amélioration de l'inclusion financière</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc11">
+        <span class="q-num">Question 12</span>
+        <div class="q-text">Witti Finances accompagne-t-elle ses clients informels dans la constitution de leur dossier (formalisation, comptabilité de base, documents) ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q12_accompagnement" value="Oui, accompagnement complet" required> Oui, un accompagnement complet est proposé</label>
+          <label class="opt"><input type="radio" name="q12_accompagnement" value="Oui, conseils de base"> Oui, on donne des conseils de base</label>
+          <label class="opt"><input type="radio" name="q12_accompagnement" value="Non, le client vient avec son dossier"> Non, le client arrive avec son dossier prêt</label>
+          <label class="opt"><input type="radio" name="q12_accompagnement" value="Pas de manière systématique"> Pas de manière systématique</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc12">
+        <span class="q-num">Question 13</span>
+        <div class="q-text">Quelles stratégies Witti Finances a-t-elle mises en place pour élargir son accès aux PME et acteurs informels ?<br><small style="color:var(--muted);font-size:11px;">(Plusieurs réponses possibles)</small></div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Agents de proximité dans les marchés"> Agents de proximité dans les marchés et quartiers</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Partenariats avec IMF locales"> Partenariats avec des IMF locales</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Crédit progressif (petit → grand)"> Crédit progressif (commencer petit, augmenter progressivement)</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Digitalisation (My Witti, mobile)"> Digitalisation via l'app My Witti</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Fonds de garantie mutuels"> Fonds de garantie mutuels</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Éducation financière de proximité"> Éducation et sensibilisation financière</label>
+          <label class="opt"><input type="checkbox" name="q13_strategies[]" value="Aucune stratégie formelle"> Aucune stratégie formelle pour l'instant</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc13">
+        <span class="q-num">Question 14</span>
+        <div class="q-text">Selon vous, quel serait l'impact d'une plateforme numérique de courtage en crédit — servant d'intermédiaire entre les acteurs informels et les institutions comme Witti Finances — sur l'inclusion financière en Côte d'Ivoire ?</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q14_impact_plateforme" value="Très positif" required> Très positif — cela améliorerait significativement l'accès au crédit</label>
+          <label class="opt"><input type="radio" name="q14_impact_plateforme" value="Positif mais à réguler"> Positif, à condition d'être bien encadré et régulé</label>
+          <label class="opt"><input type="radio" name="q14_impact_plateforme" value="Neutre"> Neutre — les problèmes de fond resteraient les mêmes</label>
+          <label class="opt"><input type="radio" name="q14_impact_plateforme" value="Risqué"> Risqué — cela pourrait favoriser le surendettement</label>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc14">
+        <span class="q-num">Question 15</span>
+        <div class="q-text">En tant que chargé d'affaires, quelle est votre principale recommandation pour améliorer le financement des PME et du secteur informel en Côte d'Ivoire ?</div>
+        <div class="q-hint">Répondez librement. Votre point de vue terrain constitue une source primaire précieuse pour ce mémoire.</div>
+        <textarea class="field" name="q15_recommandation" rows="5" placeholder="Votre recommandation..."></textarea>
+      </div>
+
+      <div class="nav">
+        <button type="button" class="btn btn-back" onclick="goTo(2)">← Retour</button>
+        <button type="submit" class="btn btn-submit" onclick="handleSubmit(event)">✓ Soumettre l'entretien</button>
+      </div>
+    </div>
+
+  </form>
+  <!-- FIN FORMULAIRE -->
+
+  <!-- ===== ÉCRAN DE SUCCÈS ===== -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-top">
+      <span class="success-icon">✅</span>
+      <div class="success-title">Entretien transmis avec succès</div>
+      <p class="success-desc">Vos réponses ont été enregistrées. Elles constituent une source primaire essentielle pour le mémoire sur le financement des PME et du secteur informel en Côte d'Ivoire.</p>
+      <div class="send-badge">
+        <div class="send-dot"></div>
+        Transmis via Formspree · Witti Finances CI
+      </div>
+    </div>
+
+    <div class="recap-box" id="recapBox">
+      <h3>Récapitulatif de vos réponses</h3>
+      <div id="recapContent"></div>
+    </div>
+
+    <div class="footer-note">
+      <strong>Mémoire de fin d'études · Institut Universitaire d'Abidjan (IUA)</strong><br>
+      Thème : <em>Mise en place d'une stratégie de financement des PME et du secteur informel en Côte d'Ivoire — Cas de Witti Finances</em><br>
+      Filière Finance · Licence 3 · 2024–2025
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let cur = 0;
+  const total = 4;
+
+  function updateProgress() {
+    const pct = (cur / total) * 100;
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progTxt').textContent = `Section ${cur + 1} / ${total}`;
+  }
+
+  function goTo(n) {
+    document.getElementById('step-' + cur).classList.remove('active');
+    cur = n;
+    document.getElementById('step-' + cur).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('mainForm');
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        // Masquer formulaire, afficher succès
+        form.style.display = 'none';
+        document.getElementById('progressStrip') && (document.getElementById('progressStrip').style.display = 'none');
+        document.getElementById('progFill').style.width = '100%';
+        document.getElementById('progTxt').textContent = 'Complété ✓';
+
+        // Générer le récap
+        const recap = document.getElementById('recapContent');
+        const labels = {
+          q1_anciennete: "Ancienneté chez Witti Finances",
+          q2_part_informel: "Part PME / informel dans le portefeuille",
+          q3_produits_informel: "Produits spécifiques secteur informel",
+          q5_delai: "Délai moyen de traitement",
+          q6_garantie: "Garantie obligatoire petits crédits",
+          q7_complexite: "Complexité du processus (1-5)",
+          q8_tracabilite: "Traçabilité = cause principale de refus",
+          q10_scoring: "Utilisation du scoring alternatif",
+          q11_taux_refus: "Taux de refus estimé (informel)",
+          q12_accompagnement: "Accompagnement constitution dossier",
+          q14_impact_plateforme: "Impact d'une plateforme de courtage numérique",
+          q15_recommandation: "Recommandation principale (texte libre)",
+        };
+
+        const multiLabels = {
+          'q4_criteres[]': "Critères principaux d'octroi",
+          'q9_docs_alternatifs[]': "Documents alternatifs acceptés",
+          'q13_strategies[]': "Stratégies d'élargissement mises en place",
+        };
+
+        let html = '';
+
+        // Singles
+        for (const [name, label] of Object.entries(labels)) {
+          const val = data.get(name) || '—';
+          html += `<div class="recap-row"><div class="recap-q">${label}</div><div class="recap-a">${val}</div></div>`;
+        }
+
+        // Multiples
+        for (const [name, label] of Object.entries(multiLabels)) {
+          const vals = data.getAll(name);
+          const display = vals.length ? vals.join(', ') : '—';
+          html += `<div class="recap-row"><div class="recap-q">${label}</div><div class="recap-a">${display}</div></div>`;
+        }
+
+        recap.innerHTML = html;
+
+        document.getElementById('successScreen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert("Une erreur s'est produite. Vérifiez votre connexion et réessayez.");
+      }
+    } catch (err) {
+      alert("Erreur réseau. Vérifiez votre connexion internet.");
+    }
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
